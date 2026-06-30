@@ -1,0 +1,50 @@
+name: policy
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kyverno:
+    name: kyverno policy checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: kyverno/action-install-cli@v0.2.0
+        with:
+          release: v1.15.2
+      - name: Good workload passes baseline policies
+        run: |
+          kyverno apply policies/baseline \
+            --resource policies/tests/good-pod.yaml
+      - name: Latest-tag workload is rejected
+        run: |
+          set +e
+          kyverno apply policies/baseline \
+            --resource policies/tests/bad-latest-pod.yaml \
+            > /tmp/bad-latest.log 2>&1
+          status=$?
+          cat /tmp/bad-latest.log
+          if [ "$status" -eq 0 ]; then
+            echo "Expected latest-tag workload to fail policy evaluation."
+            exit 1
+          fi
+      - name: Privileged workload is rejected
+        run: |
+          set +e
+          kyverno apply policies/baseline \
+            --resource policies/tests/bad-privileged-pod.yaml \
+            > /tmp/bad-privileged.log 2>&1
+          status=$?
+          cat /tmp/bad-privileged.log
+          if [ "$status" -eq 0 ]; then
+            echo "Expected privileged workload to fail policy evaluation."
+            exit 1
+          fi
+
