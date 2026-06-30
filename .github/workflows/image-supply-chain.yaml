@@ -54,7 +54,7 @@ jobs:
           image: ${{ steps.image.outputs.image }}
           fail-build: true
           severity-cutoff: high
-      - uses: sigstore/cosign-installer@v4
+      - uses: sigstore/cosign-installer@v4.1.2
       - name: Sign image
         run: cosign sign --yes "${{ steps.image.outputs.image }}"
       - name: Attest SBOM
