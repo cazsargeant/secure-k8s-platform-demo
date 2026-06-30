@@ -1,4 +1,4 @@
-FROM node:22-alpine AS runtime
+FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -7,8 +7,6 @@ ENV PORT=8080
 COPY package.json ./
 COPY src ./src
 
-USER node
 EXPOSE 8080
 
-CMD ["node", "src/server.js"]
-
+CMD ["src/server.js"]
