@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: app tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Test demo API
+        working-directory: apps/demo-api
+        run: npm test
+
+  manifests:
+    name: manifest validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: yokawasa/action-setup-kube-tools@v0.11.3
+        with:
+          setup-tools: |
+            kubeconform
+            kustomize
+          kubeconform: "0.6.7"
+          kustomize: "5.7.1"
+      - name: Render kustomize overlays
+        run: |
+          mkdir -p rendered
+          kustomize build platform/apps/demo-api > rendered/demo-api.yaml
+          kustomize build platform/gateway > rendered/gateway.yaml
+          kustomize build policies/baseline > rendered/kyverno.yaml
+      - name: Validate rendered Kubernetes manifests
+        run: |
+          kubeconform \
+            -strict \
+            -summary \
+            -ignore-missing-schemas \
+            rendered/*.yaml
