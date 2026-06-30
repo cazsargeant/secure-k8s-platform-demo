@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runtime
+FROM cgr.dev/chainguard/node@sha256:955b52dd59f8a73419fe1931e13a9b9eb822e7e5fda21ca754688b55753ea6ca AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production
