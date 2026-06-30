@@ -1,4 +1,4 @@
-# Secure Kubernetes Platform Golden Path Design
+# Secure Kubernetes Platform Demo Design
 
 ## Goal
 
@@ -9,7 +9,7 @@ Build a local Kubernetes demo/example that highlights platform engineering and s
 - The demo app is not a product.
 - The platform does not require cloud credentials.
 - The initial version does not include a service mesh, database, Terraform, or cloud IAM.
-- The repository does not grant an open-source license unless a license is added.
+- The repository does not grant an open source license unless a license is added.
 
 ## Architecture
 

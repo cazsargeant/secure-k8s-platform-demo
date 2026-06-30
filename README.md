@@ -1,8 +1,10 @@
-# Secure Kubernetes Platform Golden Path
+# Secure Kubernetes Platform Demo
 
-This repository is a demo/example of platform engineering work: a small Kubernetes platform path that moves a deliberately minimal service from source code to a governed runtime.
+This repository is an example of my platform engineering work: a small Kubernetes platform path that moves a deliberately minimal service from source code to a governed runtime.
 
-The service is intentionally boring. The point is the platform around it: GitOps layout, Gateway API, admission policy, signed artifacts, SBOMs, vulnerability scanning, and clear operational documentation.
+The service is intentionally boring. The value is in the platform around it: GitOps layout, Gateway API, admission policy, signed artifacts, SBOMs, vulnerability scanning, and clear operational documentation.
+
+This repository is published as a demonstration/example. It is not distributed as open source software, and no license is granted unless a `LICENSE` file is added.
 
 ## What This Demonstrates
 
@@ -16,6 +18,18 @@ The service is intentionally boring. The point is the platform around it: GitOps
 - Kubernetes manifest validation with kubeconform
 - CI policy checks before deployment
 - GKE-aligned design without requiring GCP credentials
+
+## Security Posture
+
+This example uses practical platform controls rather than application complexity:
+
+- non-root workloads with restricted pod security settings
+- explicit CPU and memory requests/limits
+- mutable image tag rejection
+- privileged container rejection
+- SBOM generation and vulnerability scanning before trusted artifact publication
+- keyless image signing and SBOM attestation in CI
+- optional Kyverno image verification policy for GHCR images
 
 ## Repository Layout
 
@@ -72,6 +86,6 @@ The local path installs the platform components and deploys the demo API through
 7. Use Kyverno policies to reject unsafe workload definitions.
 8. Route traffic to the service through Gateway API.
 
-## License
+## Licensing
 
-No open-source license is granted by this repository unless a `LICENSE` file is added.
+No open source license is granted by this repository unless a `LICENSE` file is added.
